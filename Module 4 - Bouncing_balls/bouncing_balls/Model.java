@@ -43,7 +43,8 @@ class Model {
 							b2.vx = tmp;
 							tmp = b.vy;
 							b.vy = b2.vy;
-							b2.vy = tmp;							
+							b2.vy = tmp;
+							
 						}
 					}
 				}
@@ -61,8 +62,7 @@ class Model {
 			// compute new position according to the speed of the ball
 			b.x += deltaT * b.vx;
 			b.y += deltaT * b.vy;
-			
-			
+			b.vy += deltaT * -9.82;
 		}
 	}
 	
