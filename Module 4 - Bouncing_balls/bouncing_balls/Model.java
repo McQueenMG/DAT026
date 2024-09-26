@@ -33,43 +33,46 @@ class Model {
 	void step(double deltaT) {
 		// TODO this method implements one step of simulation with a step deltaT
 
+					
+
 		for (Ball b : balls) {
+
+			// apply gravity
+			b.vy -= g * deltaT;
+
 			boolean collisionHasOccured = false;
 			// detect collision with other balls
 			for(Ball b2 : balls) {
 				if (b2 == b) continue;
 				
 				if (!checkBallCollision(b, b2)) continue;
+				collisionHasOccured = true;
 
 				double angle = calcBaseAngle(b, b2);
 				double[] b1v = calcCoordsNewBase(b.vx, b.vy, angle);
 				double[] b2v = calcCoordsNewBase(b2.vx, b2.vy, angle);
 
-				double u1 = Math.sqrt(b1v[0]*b1v[0] + b1v[1]*b1v[1]);
-				double u2 = Math.sqrt(b2v[0]*b2v[0] + b2v[1]*b2v[1]);
+				double u1 = b1v[0];
+				double u2 = b2v[0];
 
 				double I = b.m * u1 + b2.m * u2;
 				double R = u2 - u1;
 
-				double v1 = (I + (b2.m * R)) / (b.m + b2.m) ;
-				double v2 = v1 - R;
+				double v1x = (I + (b2.m * R)) / (b.m + b2.m) ;
+				double v2x = v1x - R;
 
-				double v1x = Math.cos(angle) * v1;
-				double v1y = Math.sin(angle) * v1;
-				double v2x = Math.cos(angle) * v2;
-				double v2y = Math.sin(angle) * v2;
+				double[] v1 = calcCoordsOldBase(v1x, b1v[1], angle);
+				double[] v2 = calcCoordsOldBase(v2x, b2v[1], angle);
 
-
-				b.vx = v1x;
-				b.vy = v1y;
-				b2.vx = v2x;
-				b2.vy = v2y;
+				b.vx = v1[0];
+				b.vy = v1[1];
+				b2.vx = v2[0];
+				b2.vy = v2[1];
 
 				resolveOverlap(b, b2);
 
-				collisionHasOccured = true;
-
 				System.out.println(b.vx + " " + b.vy);
+
 			}
 
 			// detect collision with the border
@@ -98,6 +101,7 @@ class Model {
 				{
 					double overlap = Math.abs(0-(b.y - b.radius));
 					b.y += overlap;
+
 				}
 				else {
 					double overlap = Math.abs(areaHeight-(b.y + b.radius));
@@ -109,8 +113,7 @@ class Model {
 				collisionHasOccured = true;
 			}
 			
-			// apply gravity
-			b.vy -= g * deltaT;
+
 
  			//Change velocity according to the speed of the ball
 			b.x += deltaT * b.vx;
@@ -149,6 +152,12 @@ class Model {
 	private double[] calcCoordsNewBase(double x, double y, double angle){
 		double newX = x * Math.cos(angle) + y * Math.sin(angle);
 		double newY = - x * Math.sin(angle) + y * Math.cos(angle);
+		return new double[]{newX, newY};
+	}
+
+	private double[] calcCoordsOldBase(double x, double y, double angle){
+		double newX = x * Math.cos(angle) - y * Math.sin(angle);
+		double newY = x * Math.sin(angle) + y * Math.cos(angle);
 		return new double[]{newX, newY};
 	}
 
