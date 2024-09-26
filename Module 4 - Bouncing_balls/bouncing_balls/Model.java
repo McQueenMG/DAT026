@@ -67,7 +67,6 @@ class Model {
 				b.vy = v1[1];
 				b2.vx = v2[0];
 				b2.vy = v2[1];
-				System.out.println("v1x: " + v1[0] + " v1y: " + v1[1]);
 
 				// Resolve overlap
 				resolveOverlap(b, b2);
@@ -103,7 +102,7 @@ class Model {
 					double overlap = Math.abs(areaHeight - (b.y + b.radius));
 					b.y -= overlap;
 				}
-				
+
 				b.vy *= -1;
 			}
 
@@ -123,7 +122,6 @@ class Model {
 
 		// Normalize the direction from b1 to b2
 		if (overlap > 0) {
-			System.out.println("Resolving overlap");
 			double nx = dx / distance;
 			double ny = dy / distance;
 
