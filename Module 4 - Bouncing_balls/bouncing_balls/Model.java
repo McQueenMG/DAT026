@@ -125,9 +125,7 @@ class Model {
 			double nx = dx / distance;
 			double ny = dy / distance;
 
-			// Move the balls apart by "half" the overlap in opposite directions
-			// We move by an additional arbitrary amount to avoid them sticking together as
-			// often.
+			// Move the balls apart by "half"(a little more as a failsafe) the overlap in opposite directions
 			b1.x -= nx * overlap / 1.5;
 			b1.y -= ny * overlap / 1.5;
 			b2.x += nx * overlap / 1.5;
